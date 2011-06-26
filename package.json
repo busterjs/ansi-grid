@@ -1,0 +1,20 @@
+{
+    "name": "buster-terminal",
+    "version": "0.1.0",
+    "description": "String tools for terminal formatting",
+    "homepage": "http://busterjs.org/buster-terminal",
+    "contributors": [{
+        "name": "Christian Johansen",
+        "email": "christian@cjohansen.no",
+        "url": "http://cjohansen.no"
+    }, {
+        "name": "August Lilleaas",
+        "email": "august.lilleaas@gmail.com",
+        "url": "http://augustl.com"
+    }],
+    "main": "./lib/buster-terminal",
+    "repository": {
+        "type": "git",
+        "url": "git://gitorious.org/buster/buster-terminal.git"
+    }
+}
