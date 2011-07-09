@@ -1,6 +1,6 @@
 var buster = require("buster");
 var assert = buster.assert;
-var a = require("../../lib/buster-terminal").align;
+var a = require("../lib/buster-terminal");
 
 buster.testCase("Terminal string align test", {
     "max width": {
