@@ -24,6 +24,10 @@ buster.testCase("Terminal string align test", {
 
         "should right align text": function () {
             assert.equals(a.alignRight("Hey there", 13), "    Hey there");
+        },
+
+        "should not pad too long text": function () {
+            assert.equals(a.alignRight("Hey there", 4), "Hey there");
         }
     }
 });
