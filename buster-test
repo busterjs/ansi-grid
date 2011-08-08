@@ -1,2 +1,0 @@
-#!/bin/sh
-node_modules/buster-test-cli/bin/buster-test $*
