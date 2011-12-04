@@ -79,7 +79,7 @@ buster.testCase("Buster terminal", {
         },
 
         "should color text grey": function () {
-            assert.equals(this.t.grey("String"), "\033[30mString\033[0m");
+            assert.equals(this.t.grey("String"), "\033[38;5;8mString\033[0m");
         },
 
         "should bold text": function () {
@@ -118,7 +118,7 @@ buster.testCase("Buster terminal", {
         },
 
         "should color text bright grey": function () {
-            assert.equals(this.t.grey("String"), "\033[1m\033[30mString\033[0m");
+            assert.equals(this.t.grey("String"), "\033[1m\033[38;5;8mString\033[0m\033[0m");
         },
 
         "should bold text": function () {
