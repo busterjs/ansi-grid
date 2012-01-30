@@ -19,14 +19,19 @@ buster.testCase("Buster terminal labeled list test", {
 
         this.stub(terminal, "save", function () { return "S+"; });
         this.stub(terminal, "restore", function () { return "R+"; });
-        this.stub(terminal, "up", function (n) { return n == 0 ? "" : "U"+n+"+"; });
-        this.stub(terminal, "fwd", function (n) { return n == 0 ? "" : "F"+n+"+"; });
+        this.stub(terminal, "up", function (n) {
+            return n === 0 ? "" : "U" + n + "+";
+        });
+        this.stub(terminal, "fwd", function (n) {
+            return n === 0 ? "" : "F" + n + "+";
+        });
     },
 
     "should print labels in equally spaced cells": function () {
         var list = labeledList.create(this.io, "Internet Explorer", "Firefox");
 
-        assert.equals("Internet Explorer: \nFirefox:           \n", this.io.out);
+        assert.equals("Internet Explorer: \nFirefox:           \n",
+                      this.io.out);
     },
 
     "should print dot for first item": function () {
@@ -44,7 +49,8 @@ buster.testCase("Buster terminal labeled list test", {
         list.print("Internet Explorer", "E");
 
         assert.equals(s("Internet Explorer: \nFirefox:           \n" +
-                        "S+U2+F19+.R+S+U1+F19+.R+S+U2+F20+ER+"), s(this.io.out));
+                        "S+U2+F19+.R+S+U1+F19+.R+S+U2+F20+ER+"),
+                      s(this.io.out));
     },
 
     "should add label": function () {
@@ -53,8 +59,10 @@ buster.testCase("Buster terminal labeled list test", {
         list.add("Firefox");
         list.print("Internet Explorer", ".");
 
-        assert.equals(s("Internet Explorer: \nFirefox:           \nS+U2+F19+.R+"),
-                      s(this.io.out));
+        assert.equals(
+            s("Internet Explorer: \nFirefox:           \nS+U2+F19+.R+"),
+            s(this.io.out)
+        );
     },
 
     "should refit labels when adding a wider one": function () {
@@ -65,8 +73,10 @@ buster.testCase("Buster terminal labeled list test", {
 
         list.add("Internet Explorer");
 
-        assert.equals("Firefox: \nS+U1+Firefox:           R+Internet Explorer: \n",
-                      this.io.out);
+        assert.equals(
+            "Firefox: \nS+U1+Firefox:           R+Internet Explorer: \n",
+            this.io.out
+        );
     },
 
     "should save contents when adding and refitting labels": function () {
@@ -79,8 +89,8 @@ buster.testCase("Buster terminal labeled list test", {
         list.print("Firefox", "F");
         list.print("Internet Explorer", ".");
 
-        assert.equals("Firefox: \nS+U1+F9+.R+S+U1+F10+.R+S+U1+Firefox:           " +
-                      "..R+Internet Explorer: \nChrome:            " +
-                      "\nS+U3+F21+FR+S+U2+F19+.R+", this.io.out);
+        assert.equals("Firefox: \nS+U1+F9+.R+S+U1+F10+.R+S+U1+Firefox:" +
+                      "           ..R+Internet Explorer: \nChrome:" +
+                      "            \nS+U3+F21+FR+S+U2+F19+.R+", this.io.out);
     }
 });

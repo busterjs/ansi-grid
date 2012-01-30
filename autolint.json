@@ -1,7 +1,9 @@
 {
     "paths": [
         "lib/*.js",
-        "test/*.js"
+        "lib/buster-terminal/*.js",
+        "test/*.js",
+        "test/buster-terminal/*.js"
     ],
     "linterOptions": {
         "node": true,

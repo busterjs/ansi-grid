@@ -55,35 +55,36 @@ buster.testCase("Buster terminal", {
         },
 
         "should colorize text": function () {
-            assert.equals(this.t.colorize("String", 31), "\033[31mString\033[0m");
+            assert.equals(this.t.colorize("String", 31),
+                          "\x1b[31mString\x1b[0m");
         },
 
         "should color text red": function () {
-            assert.equals(this.t.red("String"), "\033[31mString\033[0m");
+            assert.equals(this.t.red("String"), "\x1b[31mString\x1b[0m");
         },
 
         "should color text green": function () {
-            assert.equals(this.t.green("String"), "\033[32mString\033[0m");
+            assert.equals(this.t.green("String"), "\x1b[32mString\x1b[0m");
         },
 
         "should color text yellow": function () {
-            assert.equals(this.t.yellow("String"), "\033[33mString\033[0m");
+            assert.equals(this.t.yellow("String"), "\x1b[33mString\x1b[0m");
         },
 
         "should color text purple": function () {
-            assert.equals(this.t.purple("String"), "\033[35mString\033[0m");
+            assert.equals(this.t.purple("String"), "\x1b[35mString\x1b[0m");
         },
 
         "should color text cyan": function () {
-            assert.equals(this.t.cyan("String"), "\033[36mString\033[0m");
+            assert.equals(this.t.cyan("String"), "\x1b[36mString\x1b[0m");
         },
 
         "should color text grey": function () {
-            assert.equals(this.t.grey("String"), "\033[38;5;8mString\033[0m");
+            assert.equals(this.t.grey("String"), "\x1b[38;5;8mString\x1b[0m");
         },
 
         "should bold text": function () {
-            assert.equals(this.t.bold("String"), "\033[1mString\033[0m");
+            assert.equals(this.t.bold("String"), "\x1b[1mString\x1b[0m");
         }
     },
 
@@ -94,38 +95,38 @@ buster.testCase("Buster terminal", {
 
         "should colorize text brightly": function () {
             assert.equals(this.t.colorize("String", 31),
-                          "\033[1m\033[31mString\033[0m");
+                          "\x1b[1m\x1b[31mString\x1b[0m");
         },
 
         "should color text bright red": function () {
-            assert.equals(this.t.red("String"), "\033[1m\033[31mString\033[0m");
+            assert.equals(this.t.red("String"), "\x1b[1m\x1b[31mString\x1b[0m");
         },
 
         "should color text bright green": function () {
             assert.equals(this.t.green("String"),
-                          "\033[1m\033[32mString\033[0m");
+                          "\x1b[1m\x1b[32mString\x1b[0m");
         },
 
         "should color text bright yellow": function () {
-            assert.equals(this.t.yellow("Str"), "\033[1m\033[33mStr\033[0m");
+            assert.equals(this.t.yellow("Str"), "\x1b[1m\x1b[33mStr\x1b[0m");
         },
 
         "should color text bright purple": function () {
-            assert.equals(this.t.purple("Str"), "\033[1m\033[35mStr\033[0m");
+            assert.equals(this.t.purple("Str"), "\x1b[1m\x1b[35mStr\x1b[0m");
         },
 
         "should color text bright cyan": function () {
             assert.equals(this.t.cyan("String"),
-                          "\033[1m\033[36mString\033[0m");
+                          "\x1b[1m\x1b[36mString\x1b[0m");
         },
 
         "should color text bright grey": function () {
             assert.equals(this.t.grey("String"),
-                          "\033[1m\033[38;5;8mString\033[0m\033[0m");
+                          "\x1b[1m\x1b[38;5;8mString\x1b[0m\x1b[0m");
         },
 
         "should bold text": function () {
-            assert.equals(this.t.bold("String"), "\033[1mString\033[0m");
+            assert.equals(this.t.bold("String"), "\x1b[1mString\x1b[0m");
         }
     },
 
@@ -135,7 +136,7 @@ buster.testCase("Buster terminal", {
         },
 
         "should move one line up": function () {
-            assert.equals(this.t.up(1), "\033[1A");
+            assert.equals(this.t.up(1), "\x1b[1A");
         },
 
         "should not move up anywhere": function () {
@@ -144,7 +145,7 @@ buster.testCase("Buster terminal", {
         },
 
         "should move one line down": function () {
-            assert.equals(this.t.down(1), "\033[1B");
+            assert.equals(this.t.down(1), "\x1b[1B");
         },
 
         "should not move down anywhere": function () {
@@ -153,7 +154,7 @@ buster.testCase("Buster terminal", {
         },
 
         "should move two columns forward": function () {
-            assert.equals(this.t.fwd(2), "\033[2C");
+            assert.equals(this.t.fwd(2), "\x1b[2C");
         },
 
         "should not move forward anywhere": function () {
@@ -162,11 +163,11 @@ buster.testCase("Buster terminal", {
         },
 
         "should save position": function () {
-            assert.equals(this.t.save(), "\0337");
+            assert.equals(this.t.save(), "\x1b7");
         },
 
         "should restore position": function () {
-            assert.equals(this.t.restore(), "\0338");
+            assert.equals(this.t.restore(), "\x1b8");
         },
 
         "should move in transaction": function () {
@@ -174,11 +175,12 @@ buster.testCase("Buster terminal", {
                 return this.up(2) + this.fwd(4) + this.down(1);
             });
 
-            assert.equals(str, "\0337\033[2A\033[4C\033[1B\0338");
+            assert.equals(str, "\x1b7\x1b[2A\x1b[4C\x1b[1B\x1b8");
         },
 
         "should strip ansi escape characters": function () {
-            assert.equals(this.t.stripSeq(this.t.red(this.t.yellow("Hey"))), "Hey");
+            assert.equals(this.t.stripSeq(this.t.red(this.t.yellow("Hey"))),
+                          "Hey");
         }
     }
 });
