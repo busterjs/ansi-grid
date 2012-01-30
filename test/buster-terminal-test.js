@@ -102,7 +102,8 @@ buster.testCase("Buster terminal", {
         },
 
         "should color text bright green": function () {
-            assert.equals(this.t.green("String"), "\033[1m\033[32mString\033[0m");
+            assert.equals(this.t.green("String"),
+                          "\033[1m\033[32mString\033[0m");
         },
 
         "should color text bright yellow": function () {
@@ -114,11 +115,13 @@ buster.testCase("Buster terminal", {
         },
 
         "should color text bright cyan": function () {
-            assert.equals(this.t.cyan("String"), "\033[1m\033[36mString\033[0m");
+            assert.equals(this.t.cyan("String"),
+                          "\033[1m\033[36mString\033[0m");
         },
 
         "should color text bright grey": function () {
-            assert.equals(this.t.grey("String"), "\033[1m\033[38;5;8mString\033[0m\033[0m");
+            assert.equals(this.t.grey("String"),
+                          "\033[1m\033[38;5;8mString\033[0m\033[0m");
         },
 
         "should bold text": function () {
@@ -135,7 +138,7 @@ buster.testCase("Buster terminal", {
             assert.equals(this.t.up(1), "\033[1A");
         },
 
-        "should not move anywhere": function () {
+        "should not move up anywhere": function () {
             assert.equals(this.t.up(0), "");
             assert.equals(this.t.up(), "");
         },
@@ -144,7 +147,7 @@ buster.testCase("Buster terminal", {
             assert.equals(this.t.down(1), "\033[1B");
         },
 
-        "should not move anywhere": function () {
+        "should not move down anywhere": function () {
             assert.equals(this.t.down(0), "");
             assert.equals(this.t.down(), "");
         },
@@ -153,7 +156,7 @@ buster.testCase("Buster terminal", {
             assert.equals(this.t.fwd(2), "\033[2C");
         },
 
-        "should not move anywhere": function () {
+        "should not move forward anywhere": function () {
             assert.equals(this.t.fwd(0), "");
             assert.equals(this.t.fwd(), "");
         },
