@@ -84,6 +84,44 @@ buster.testCase("Matrix", {
         }
     },
 
+    "multi-line cells": {
+        setUp: function () {
+            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 3 });
+        },
+
+        "prints multi-line content in first column": function () {
+            this.matrix.addRow(["One\nTwo", "Three", "Four"]);
+            assert.stdout("One Three Four \n" +
+                          "Two \n");
+        },
+
+        "prints multi-line content in middle column": function () {
+            this.matrix.addRow(["One", "Two\nThree", "Four"]);
+            assert.stdout("One Two   Four \n" +
+                          "    Three \n");
+        },
+
+        "prints multi-line content in last column": function () {
+            this.matrix.addRow(["One", "Two", "Three\nFour"]);
+            assert.stdout("One Two Three \n" +
+                          "        Four  \n");
+        },
+
+        "prints multi-line content in all columns": function () {
+            this.matrix.addRow(["One\nTwo", "Three\nFour", "Five\nSix"]);
+            assert.stdout("One Three Five \n" +
+                          "Two Four  Six  \n");
+        },
+
+        "adds row after multi-line row": function () {
+            this.matrix.addRow(["One", "Two\nThree", "Four"]);
+            this.matrix.addRow(["Five", "Six", "Seven"]);
+            assert.stdout("One  Two   Four  \n" +
+                          "     Three       \n" +
+                          "Five Six   Seven \n");
+        }
+    },
+
     "redrawing": {
         "replaces single column": function () {
             var m = terminal.createMatrix({ grid: this.grid, columns: 1 });
@@ -155,5 +193,159 @@ buster.testCase("Matrix", {
         }
     },
 
-    "// does all the things with colors": "Finish the plain thing first"
+    "inserting row": {
+        setUp: function () {
+            this.matrix = terminal.createMatrix({
+                grid: this.grid,
+                columns: 2
+            });
+        },
+
+        "adds row to the bottom": function () {
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.insertRow(1, ["Three", "Four"]);
+            assert.stdout("One   Two  \n" +
+                          "Three Four \n");
+        },
+
+        "fails for mis-matched column count": function () {
+            var m = terminal.createMatrix({ columns: 2 });
+            assert.exception(function () {
+                m.insertRow(0, [""]);
+            });
+            assert.exception(function () {
+                m.insertRow(0, ["", "", ""]);
+            });
+        },
+
+        "fails when row-index out of bounds": function () {
+            var m = terminal.createMatrix({ columns: 2 });
+            assert.exception(function () {
+                m.insertRow(1, ["", ""]);
+            });
+        },
+
+        "adds row to the top": function () {
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.insertRow(0, ["Three", "Four"]);
+            assert.stdout("Three Four \n" +
+                          "One   Two  \n");
+        },
+
+        "adds row in the middle": function () {
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.addRow(["Five", "Six"]);
+            this.matrix.insertRow(1, ["Three", "Four"]);
+            assert.stdout("One   Two  \n" +
+                          "Three Four \n" +
+                          "Five  Six  \n");
+        },
+
+        "inserts rows then adds one to the bottom": function () {
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.addRow(["Five", "Six"]);
+            this.matrix.insertRow(1, ["Three", "Four"]);
+            this.matrix.insertRow(2, ["5", "6"]);
+            this.matrix.addRow(["-", "."]);
+            assert.stdout("One   Two  \n" +
+                          "Three Four \n" +
+                          "5     6    \n" +
+                          "Five  Six  \n" +
+                          "-     .    \n");
+        },
+
+        "inserts multi-line row at the top": function () {
+            this.matrix.addRow(["Five", "Six"]);
+            this.matrix.insertRow(0, ["One", "Two\nThree"]);
+            assert.stdout("One  Two   \n" +
+                          "     Three \n" +
+                          "Five Six   \n");
+        }
+    },
+
+    "column wrapping": {
+        setUp: function () {
+            this.matrix = terminal.createMatrix({
+                grid: this.grid,
+                columns: 3
+            });
+        },
+
+        "wraps too long column": function () {
+            this.matrix.resizeColumn(1, 5);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", "..........", "Ok"]);
+            assert.stdout("Firefox ..... Ok \n" +
+                          "        ..... \n");
+        },
+
+        "wraps too long column multiple times": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", "..........", "Ok"]);
+            assert.stdout("Firefox ... Ok \n" +
+                          "        ... \n" +
+                          "        ... \n" +
+                          "        .   \n");
+        }
+    },
+
+    "appending content": {
+        setUp: function () {
+            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+        },
+
+        "grows column as needed": function () {
+            this.matrix.addRow(["Firefox", ""]);
+            this.matrix.addRow(["Chrome", ""]);
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(1, 1, "F");
+            this.matrix.append(1, 1, ".");
+            assert.stdout("Firefox .. \n" +
+                          "Chrome  F. \n");
+        },
+
+        "wraps column as needed": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", ""]);
+            this.matrix.append(0, 1, "...");
+            this.matrix.append(0, 1, "...");
+            assert.stdout("Firefox ... \n" +
+                          "        ... \n");
+        },
+
+        "wraps column and moves subsequent lines as needed": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", ""]);
+            this.matrix.addRow(["Chrome", ""]);
+            this.matrix.append(0, 1, "......");
+            assert.stdout("Firefox ... \n" +
+                          "        ... \n" +
+                          "Chrome      \n");
+        },
+
+        "wraps and moves continuously": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", ""]);
+            this.matrix.addRow(["Chrome", ""]);
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            assert.stdout("Firefox ... \n" +
+                          "        ... \n" +
+                          "        ..  \n" +
+                          "Chrome      \n");
+        }
+    },
+
+    "does all the things with colors": "- Finish the plain thing first"
 });

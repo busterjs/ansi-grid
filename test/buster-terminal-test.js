@@ -16,35 +16,35 @@ buster.testCase("Buster terminal", {
             this.t = terminal.create();
         },
 
-        "should not colorize text": function () {
+        "does not colorize text": function () {
             assert.equals(this.t.colorize("String", 31), "String");
         },
 
-        "should not color text red": function () {
+        "does not color text red": function () {
             assert.equals(this.t.red("String"), "String");
         },
 
-        "should not color text green": function () {
+        "does not color text green": function () {
             assert.equals(this.t.green("String"), "String");
         },
 
-        "should not color text yellow": function () {
+        "does not color text yellow": function () {
             assert.equals(this.t.yellow("String"), "String");
         },
 
-        "should not color text purple": function () {
+        "does not color text purple": function () {
             assert.equals(this.t.purple("String"), "String");
         },
 
-        "should not color text cyan": function () {
+        "does not color text cyan": function () {
             assert.equals(this.t.cyan("String"), "String");
         },
 
-        "should not color text grey": function () {
+        "does not color text grey": function () {
             assert.equals(this.t.grey("String"), "String");
         },
 
-        "should not bold text": function () {
+        "does not bold text": function () {
             assert.equals(this.t.bold("String"), "String");
         }
     },
@@ -163,11 +163,11 @@ buster.testCase("Buster terminal", {
         },
 
         "saves position": function () {
-            assert.equals(this.t.save(), "\x1b7");
+            assert.equals(this.t.save(), "\x1b[s");
         },
 
         "restores position": function () {
-            assert.equals(this.t.restore(), "\x1b8");
+            assert.equals(this.t.restore(), "\x1b[u");
         },
 
         "moves in transaction": function () {
@@ -175,7 +175,7 @@ buster.testCase("Buster terminal", {
                 return this.up(2) + this.fwd(4) + this.down(1);
             });
 
-            assert.equals(str, "\x1b7\x1b[2A\x1b[4C\x1b[1B\x1b8");
+            assert.equals(str, "\x1b[s\x1b[2A\x1b[4C\x1b[1B\x1b[u");
         },
 
         "strips ansi escape characters": function () {
@@ -185,53 +185,69 @@ buster.testCase("Buster terminal", {
     },
 
     "max width": {
-        "should get width of array of strings": function () {
+        "gets width of array of strings": function () {
             assert.equals(terminal.maxWidth(["a", "b", "hey", "there"]), 5);
         },
 
-        "should get width of array of strings and numbers": function () {
+        "gets width of array of strings and numbers": function () {
             assert.equals(terminal.maxWidth(["a", 666782, 2, "there"]), 6);
         },
 
-        "should count width of undefined as 0": function () {
+        "counts width of undefined as 0": function () {
             assert.equals(terminal.maxWidth([null, undefined, false, ""]), 5);
         }
     },
 
     "alignment": {
-        "should left align text": function () {
+        "left aligns text": function () {
             assert.equals(terminal.alignLeft("Hey there", 13), "Hey there    ");
         },
 
-        "should right align text": function () {
+        "right aligns text": function () {
             assert.equals(terminal.alignRight("Hey there", 13), "    Hey there");
         },
 
-        "should not pad too long text": function () {
+        "does not pad too long text": function () {
             assert.equals(terminal.alignRight("Hey there", 4), "Hey there");
         }
     },
 
     "fitting": {
-        "should not touch string that fits": function () {
+        "does not touch string that fits": function () {
             assert.equals(terminal.fit("Hey", 3), "Hey");
         },
 
-        "should split string over two lines": function () {
+        "splits string over two lines": function () {
             assert.equals(terminal.fit("Hey  There", 5), "Hey  \nThere");
         },
 
-        "should split string across multiple lines": function () {
+        "splits string across multiple lines": function () {
             assert.equals(terminal.fit("123456789", 1), "1\n2\n3\n4\n5\n6\n7\n8\n9");
         },
 
-        "should not split ANSI escape sequences": function () {
+        "does not split ANSI escape sequences": function () {
             assert.equals(terminal.fit("\x1b[31mHey", 3), "\x1b[31mHey");
         },
 
-        "should not split multi-line ANSI escape sequences": function () {
+        "does not split multi-line ANSI escape sequences": function () {
             assert.equals(terminal.fit("\x1b[31mHey\x1b[0m", 2),
                           "\x1b[31mHe\ny\x1b[0m");
+        },
+
+        "does not modify already fitted multi-line string": function () {
+            assert.equals(terminal.fit("Hey\nMan", 3), "Hey\nMan");
+        },
+
+        "fits too long lines in multi-line string": function () {
+            assert.equals(terminal.fit("Hey!\nMan", 3), "Hey\n!\nMan");
+        },
+
+        "splits line into multiple lines": function () {
+            assert.equals(terminal.fit("abcdefghi", 3), "abc\ndef\nghi");
+        },
+
+        "splits all lines into multiple lines": function () {
+            assert.equals(terminal.fit("...\n.....", 3), "...\n...\n..");
         }
     }
 });
