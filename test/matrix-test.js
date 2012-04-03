@@ -19,6 +19,14 @@ buster.testCase("Matrix", {
             var m = terminal.createMatrix({ columns: 2 });
             assert.exception(function () { m.addRow(["Hey"]); });
             assert.exception(function () { m.addRow(["Hey", "There", "Oops"]); });
+        },
+
+        "returns row id": function () {
+            var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            var id = m.addRow(["", ""]);
+            var id2 = m.addRow(["", ""]);
+            assert.equals(id, 0);
+            assert.equals(id2, 1);
         }
     },
 
@@ -260,6 +268,26 @@ buster.testCase("Matrix", {
             assert.stdout("One  Two   \n" +
                           "     Three \n" +
                           "Five Six   \n");
+        },
+
+        "does not reassign row id": function () {
+            var id = this.matrix.addRow([".", "."]);
+            var id2 = this.matrix.insertRow(0, ["!", "?"]);
+            assert.equals(id, 0);
+            assert.equals(id2, 1);
+            assert.equals(this.matrix.rowById(id).columns(), [".", "."]);
+        }
+    },
+
+    "rowById": {
+        setUp: function () {
+            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+        },
+
+        "returns mutable row": function () {
+            var id = this.matrix.addRow(["A", "B"]);
+            this.matrix.rowById(id).append(1, "!");
+            assert.stdout("A B! \n");
         }
     },
 
