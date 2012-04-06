@@ -89,6 +89,11 @@ buster.testCase("Matrix", {
         "prints two columns": function () {
             this.matrix.addRow(["One", "Two"]);
             assert.stdout("One Two \n");
+        },
+
+        "prints two columns with colored text": function () {
+            this.matrix.addRow(["\x1b[32mOne\x1b[0m", "\x1b[31mTwo\x1b[0m"]);
+            assert.stdout("\x1b[32mOne\x1b[0m \x1b[31mTwo\x1b[0m \n");
         }
     },
 
@@ -315,6 +320,21 @@ buster.testCase("Matrix", {
                           "        ... \n" +
                           "        ... \n" +
                           "        .   \n");
+        },
+
+        "wraps too long colored column multiple times": function () {
+            var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            m.resizeColumn(1, 3);
+            m.freezeColumn(1);
+            m.addRow(["Firefox", "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m" +
+                      "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m" +
+                      "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m" +
+                      "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m" +
+                      "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m"]);
+            assert.stdout("Firefox \x1b[32m.\x1b[0m\x1b[32m.\x1b[0m\x1b[32m. \n" +
+                          "        \x1b[0m\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m\x1b[32m. \n" +
+                          "        \x1b[0m\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m\x1b[32m. \n" +
+                          "        \x1b[0m\x1b[32m.\x1b[0m   \n");
         }
     },
 
@@ -373,7 +393,5 @@ buster.testCase("Matrix", {
                           "        ..  \n" +
                           "Chrome      \n");
         }
-    },
-
-    "does all the things with colors": "- Finish the plain thing first"
+    }
 });
