@@ -163,11 +163,11 @@ buster.testCase("Buster terminal", {
         },
 
         "saves position": function () {
-            assert.equals(this.t.save(), "\x1b[s");
+            assert.equals(this.t.save(), "\x1b7");
         },
 
         "restores position": function () {
-            assert.equals(this.t.restore(), "\x1b[u");
+            assert.equals(this.t.restore(), "\x1b8");
         },
 
         "moves in transaction": function () {
@@ -175,7 +175,7 @@ buster.testCase("Buster terminal", {
                 return this.up(2) + this.fwd(4) + this.down(1);
             });
 
-            assert.equals(str, "\x1b[s\x1b[2A\x1b[4C\x1b[1B\x1b[u");
+            assert.equals(str, "\x1b7\x1b[2A\x1b[4C\x1b[1B\x1b8");
         },
 
         "strips ansi escape characters": function () {
