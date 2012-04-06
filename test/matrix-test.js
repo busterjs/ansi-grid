@@ -392,6 +392,29 @@ buster.testCase("Matrix", {
                           "        ... \n" +
                           "        ..  \n" +
                           "Chrome      \n");
+        },
+
+        "does not redraw matrix when there's more space": function () {
+            this.matrix.resizeColumn(1, 10);
+            this.matrix.addRow(["Firefox", ""]);
+            this.spy(this.matrix, "redraw");
+            this.matrix.append(0, 1, ".");
+            refute.called(this.matrix.redraw);
+            assert.stdout("Firefox .          \n");
+        },
+
+        "redraws matrix when a new line is needed": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", ""]);
+            this.spy(this.matrix, "redraw");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            assert.calledOnce(this.matrix.redraw);
+            assert.stdout("Firefox ... \n" +
+                          "        .   \n");
         }
     }
 });
