@@ -99,6 +99,18 @@ buster.testCase("Matrix", {
         "coerces numbers to strings": function () {
             this.matrix.addRow(["Yo", 42]);
             assert.stdout("Yo 42 \n");
+        },
+
+        "prints one multi-line column": function () {
+            this.matrix.insertRow(0, ["One", "Two\nThree"]);
+            assert.stdout("One Two   \n" +
+                          "    Three \n");
+        },
+
+        "prints two multi-line columns": function () {
+            this.matrix.addRow(["One\nTwo", "Three\nFour"]);
+            assert.stdout("One Three \n" +
+                          "Two Four  \n");
         }
     },
 
@@ -247,6 +259,34 @@ buster.testCase("Matrix", {
             this.matrix.addRow(["One", "Two"]);
             this.matrix.insertRow(0, ["Three", "Four"]);
             assert.stdout("Three Four \n" +
+                          "One   Two  \n");
+        },
+
+        "adds multi-line row to the top": function () {
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.insertRow(0, ["Three", "Four\nFive"]);
+            assert.stdout("Three Four \n" +
+                          "      Five \n" +
+                          "One   Two  \n");
+        },
+
+        "adds row in fixed sized column": function () {
+            this.matrix.resizeColumn(1, 4);
+            this.matrix.freezeColumn(1);
+
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.insertRow(0, ["Three", "Four"]);
+            assert.stdout("Three Four \n" +
+                          "One   Two  \n");
+        },
+
+        "adds multi-line row in fixed sized column": function () {
+            this.matrix.resizeColumn(1, 4);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["One", "Two"]);
+            this.matrix.insertRow(0, ["Three", "Four\nFive"]);
+            assert.stdout("Three Four \n" +
+                          "      Five \n" +
                           "One   Two  \n");
         },
 
@@ -420,6 +460,63 @@ buster.testCase("Matrix", {
             assert.calledOnce(this.matrix.redraw);
             assert.stdout("Firefox ... \n" +
                           "        .   \n");
-        }
+        },
+
+        "appends content without redrawing on second line": function () {
+            this.matrix.resizeColumn(1, 3);
+            this.matrix.freezeColumn(1);
+            this.matrix.addRow(["Firefox", ""]);
+            this.spy(this.matrix, "redraw");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            this.matrix.append(0, 1, ".");
+            assert.calledOnce(this.matrix.redraw);
+            assert.stdout("Firefox ... \n" +
+                          "        ... \n");
+        }// ,
+
+        // "inserts rows and appends content": function () {
+        //     var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+        //     m.resizeColumn(1, 80);
+        //     m.freezeColumn(1);
+        //     m.addRow(["Chrome 18.0.1025.151 Linux:", ""]);
+
+        //     assert.stdout("Chrome 18.0.1025.151 Linux:                                                                                  \n");
+
+        //     m.insertRow(0, ["Chrome 18.0.1025.151 Linux", "./bogus.js:1 Boom"]);
+
+        //     assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+        //                   "Chrome 18.0.1025.151 Linux:                                                                                  \n");
+
+        //     m.addRow(["Firefox 11.0 Linux:", ""]);
+
+        //     assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
+        //                   "Firefox 11.0 Linux:                           \n");
+
+        //     m.insertRow(0, ["Firefox 11.0 Linux", "./bogus.js:1 Boom"]);
+
+        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
+        //                   "Firefox 11.0 Linux:                           \n");
+
+        //     m.append(3, 1, ".");
+
+        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
+        //                   "Firefox 11.0 Linux:         .                 \n");
+
+        //     m.append(2, 1, ".");
+
+        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+        //                   "Chrome 18.0.1025.151 Linux: .                 \n" +
+        //                   "Firefox 11.0 Linux:         .                 \n");
+        // },
     }
 });
