@@ -94,6 +94,11 @@ buster.testCase("Matrix", {
         "prints two columns with colored text": function () {
             this.matrix.addRow(["\x1b[32mOne\x1b[0m", "\x1b[31mTwo\x1b[0m"]);
             assert.stdout("\x1b[32mOne\x1b[0m \x1b[31mTwo\x1b[0m \n");
+        },
+
+        "coerces numbers to strings": function () {
+            this.matrix.addRow(["Yo", 42]);
+            assert.stdout("Yo 42 \n");
         }
     },
 
