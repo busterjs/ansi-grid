@@ -249,5 +249,39 @@ buster.testCase("Buster terminal", {
         "splits all lines into multiple lines": function () {
             assert.equals(terminal.fit("...\n.....", 3), "...\n...\n..");
         }
+    },
+
+    "reflowing": {
+        "returns text if within max length": function () {
+            assert.equals(terminal.reflow("Hey", 5), "Hey");
+        },
+
+        "breaks at first space when text is too long": function () {
+            assert.equals(terminal.reflow("Hey man", 3), "Hey\nman");
+        },
+
+        "breaks at closest space when text is too long": function () {
+            assert.equals(terminal.reflow("Hey there", 4), "Hey\nthere");
+        },
+
+        "does not break in the middle of words": function () {
+            assert.equals(terminal.reflow("Christian", 6),
+                          "Christian");
+        },
+
+        "breaks in multiple lines": function () {
+            assert.equals(terminal.reflow("My name is Christian", 6),
+                          "My\nname\nis\nChristian");
+        },
+
+        "does not break on every space": function () {
+            assert.equals(terminal.reflow("My name is Christian", 7),
+                          "My name\nis\nChristian");
+        },
+
+        "keeps existing line breaks": function () {
+            assert.equals(terminal.reflow("My\nname is Christian", 7),
+                          "My\nname is\nChristian");
+        }
     }
 });
