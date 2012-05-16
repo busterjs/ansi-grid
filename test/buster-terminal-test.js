@@ -3,14 +3,6 @@ var assert = buster.assert;
 var terminal = require("../lib/buster-terminal");
 
 buster.testCase("Buster terminal", {
-    setUp: function () {
-        this.io = {
-            out: "",
-            print: function (str) { this.out += str; },
-            puts: function (str) { this.out += str + "\n"; }
-        };
-    },
-
     "with default settings": {
         setUp: function () {
             this.t = terminal.create();
