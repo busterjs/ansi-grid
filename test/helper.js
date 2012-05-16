@@ -15,8 +15,8 @@ exports.createAsciiTerminal = function (tc) {
         }, "");
     };
 
-    var io = {
-        print: function (str) {
+    var outStream = {
+        write: function (str) {
             if (!str || !terminal.stripSeq(str)) { return; }
             var x = currPos[0];
             var y = currPos[1];
@@ -40,7 +40,6 @@ exports.createAsciiTerminal = function (tc) {
             }
             currPos = [x, y];
         },
-        puts: function (str) { this.print(str + "\n"); },
         toString: function () {
             return matrix.toString();
         }
@@ -80,5 +79,5 @@ exports.createAsciiTerminal = function (tc) {
         assertMessage: "Expected stdout to be:\n${expected}\nBut was:\n${actual}"
     });
 
-    return io;
+    return outStream;
 };

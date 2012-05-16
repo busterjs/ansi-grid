@@ -8,8 +8,8 @@ buster.testCase("Matrix", {
         this.grid = terminal.createRelativeGrid(this.terminal);
     },
 
-    "creates grid from io": function () {
-        var m = terminal.createMatrix({ io: this.terminal, columns: 1 });
+    "creates grid from output stream": function () {
+        var m = terminal.createMatrix({ outputStream: this.terminal, columns: 1 });
         m.addRow(["Text"]);
         assert.stdout("Text \n");
     },
