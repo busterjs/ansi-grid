@@ -17,5 +17,11 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/busterjs/buster-terminal.git"
+    },
+    "scripts": {
+        "test": "./node_modules/buster/bin/buster-test"
+    },
+    "devDependencies": {
+        "buster": ""
     }
 }
