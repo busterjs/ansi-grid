@@ -17,5 +17,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/busterjs/buster-terminal.git"
+    },
+    "scripts": {
+        "test": "buster test"
     }
 }
