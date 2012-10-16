@@ -1,11 +1,12 @@
-var buster = require("buster");
+var buster = require("buster-node");
+var assert = buster.assert;
 var helper = require("./helper");
-var terminal = require("../lib/buster-terminal");
+var ag = require("../lib/ansi-grid");
 
 buster.testCase("Relative grid", {
     setUp: function () {
         this.terminal = helper.createAsciiTerminal(this);
-        this.grid = terminal.createRelativeGrid(this.terminal);
+        this.grid = ag.createRelativeGrid(this.terminal);
     },
 
     "prints text": function () {
@@ -21,8 +22,7 @@ buster.testCase("Relative grid", {
     },
 
     "calculates correct position and length for colorized text": function () {
-        var t = terminal.create({ color: true });
-        this.grid.write(t.green("Hey") + "\n");
+        this.grid.write("\x1b[1mHey\x1b[0m\n");
         this.grid.go(0, 0);
         this.grid.write("Yo mister green\n");
         assert.stdout("Yo mister green\n");

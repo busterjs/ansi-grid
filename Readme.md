@@ -1,5 +1,5 @@
-# buster-format
+# ansi-grid
 
-[![Build status](https://secure.travis-ci.org/busterjs/buster-terminal.png?branch=master)](http://travis-ci.org/busterjs/buster-terminal)
+[![Build status](https://secure.travis-ci.org/busterjs/ansi-grid.png?branch=master)](http://travis-ci.org/busterjs/ansi-grid)
 
-String formatting and ANSI escape sequences for terminals
+Print grids and matrices in the terminal using ANSI escape sequences.

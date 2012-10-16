@@ -1,10 +1,11 @@
-var terminal = require("../lib/buster-terminal");
+var ansi = require("../lib/ansi");
+var buster = require("buster-node");
 
 function visualizeWhitespace(string) {
     return ("'" + string.split("\n").join("'\n'") + "'");
 }
 
-exports.createAsciiTerminal = function (tc) {
+module.exports.createAsciiTerminal = function (tc) {
     var matrix = [];
     var currPos = [0, 0];
     var saved;
@@ -17,7 +18,7 @@ exports.createAsciiTerminal = function (tc) {
 
     var outStream = {
         write: function (str) {
-            if (!str || !terminal.stripSeq(str)) { return; }
+            if (!str || !ansi.stripSeq(str)) { return; }
             var x = currPos[0];
             var y = currPos[1];
             var character, i, l, j, k;
@@ -45,32 +46,32 @@ exports.createAsciiTerminal = function (tc) {
         }
     };
 
-    tc.stub(terminal, "save", function () {
+    tc.stub(ansi, "save", function () {
         saved = currPos.slice();
         return "";
     });
-    tc.stub(terminal, "restore", function () {
+    tc.stub(ansi, "restore", function () {
         currPos = saved.slice();
         return "";
     });
-    tc.stub(terminal, "up", function (n) {
+    tc.stub(ansi, "up", function (n) {
         currPos[1] = currPos[1] - n;
         return "";
     });
-    tc.stub(terminal, "down", function (n) {
+    tc.stub(ansi, "down", function (n) {
         currPos[1] = currPos[1] + n;
         return "";
     });
-    tc.stub(terminal, "fwd", function (n) {
+    tc.stub(ansi, "fwd", function (n) {
         currPos[0] = currPos[0] + n;
         return "";
     });
-    tc.stub(terminal, "back", function (n) {
+    tc.stub(ansi, "back", function (n) {
         currPos[0] = currPos[0] - n;
         return "";
     });
 
-    buster.assertions.add("stdout", {
+    buster.referee.add("stdout", {
         assert: function (expected) {
             this.actual = visualizeWhitespace(matrix.toString());
             this.expected = visualizeWhitespace(expected);

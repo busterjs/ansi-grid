@@ -1,28 +1,30 @@
-var buster = require("buster");
+var buster = require("buster-node");
+var assert = buster.assert;
+var refute = buster.refute;
 var helper = require("./helper");
-var terminal = require("../lib/buster-terminal");
+var ag = require("../lib/ansi-grid");
 
 buster.testCase("Matrix", {
     setUp: function () {
         this.terminal = helper.createAsciiTerminal(this);
-        this.grid = terminal.createRelativeGrid(this.terminal);
+        this.grid = ag.createRelativeGrid(this.terminal);
     },
 
     "creates grid from output stream": function () {
-        var m = terminal.createMatrix({ outputStream: this.terminal, columns: 1 });
+        var m = ag.createMatrix({ outputStream: this.terminal, columns: 1 });
         m.addRow(["Text"]);
         assert.stdout("Text \n");
     },
 
     "add row": {
         "fails for wrong number of columns": function () {
-            var m = terminal.createMatrix({ columns: 2 });
+            var m = ag.createMatrix({ columns: 2 });
             assert.exception(function () { m.addRow(["Hey"]); });
             assert.exception(function () { m.addRow(["Hey", "There", "Oops"]); });
         },
 
         "returns row id": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 2 });
             var id = m.addRow(["", ""]);
             var id2 = m.addRow(["", ""]);
             assert.equals(id, 0);
@@ -32,7 +34,7 @@ buster.testCase("Matrix", {
 
     "one column": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 1 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 1 });
         },
 
         "prints text": function () {
@@ -41,13 +43,13 @@ buster.testCase("Matrix", {
         },
 
         "prints text with padding": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 1, padding: 2 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 1, padding: 2 });
             m.addRow(["Text"]);
             assert.stdout("Text  \n");
         },
 
         "prints text without padding": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 1, padding: 0 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 1, padding: 0 });
             m.addRow(["Text"]);
             assert.stdout("Text\n");
         },
@@ -83,7 +85,7 @@ buster.testCase("Matrix", {
 
     "two columns": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 2 });
         },
 
         "prints two columns": function () {
@@ -116,7 +118,7 @@ buster.testCase("Matrix", {
 
     "multi-line cells": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 3 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 3 });
         },
 
         "prints multi-line content in first column": function () {
@@ -154,14 +156,14 @@ buster.testCase("Matrix", {
 
     "redrawing": {
         "replaces single column": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 1 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 1 });
             m.addRow(["One"]);
             m.redraw();
             assert.stdout("One \n");
         },
 
         "replaces matrix with itself": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 2 });
             m.addRow(["One", "Two"]);
             m.addRow(["1", "2"]);
             m.redraw();
@@ -172,7 +174,7 @@ buster.testCase("Matrix", {
 
     "resizing": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 2 });
         },
 
         "resizes first column": function () {
@@ -192,7 +194,7 @@ buster.testCase("Matrix", {
         },
 
         "resizes middle column": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 3 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 3 });
             m.addRow(["A", "B", "C"]);
             m.addRow(["D", "E", "F"]);
             m.resizeColumn(1, 10);
@@ -215,7 +217,7 @@ buster.testCase("Matrix", {
         },
 
         "reflows matrix when resizing all columns": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 3 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 3 });
             m.addRow(["1", "2", "3"]);
             m.addRow(["One", "Two", "Three"]);
             assert.stdout("1   2   3     \n" +
@@ -225,7 +227,7 @@ buster.testCase("Matrix", {
 
     "inserting row": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({
+            this.matrix = ag.createMatrix({
                 grid: this.grid,
                 columns: 2
             });
@@ -239,7 +241,7 @@ buster.testCase("Matrix", {
         },
 
         "fails for mis-matched column count": function () {
-            var m = terminal.createMatrix({ columns: 2 });
+            var m = ag.createMatrix({ columns: 2 });
             assert.exception(function () {
                 m.insertRow(0, [""]);
             });
@@ -249,7 +251,7 @@ buster.testCase("Matrix", {
         },
 
         "fails when row-index out of bounds": function () {
-            var m = terminal.createMatrix({ columns: 2 });
+            var m = ag.createMatrix({ columns: 2 });
             assert.exception(function () {
                 m.insertRow(1, ["", ""]);
             });
@@ -331,7 +333,7 @@ buster.testCase("Matrix", {
 
     "rowById": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 2 });
         },
 
         "returns mutable row": function () {
@@ -343,7 +345,7 @@ buster.testCase("Matrix", {
 
     "column wrapping": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({
+            this.matrix = ag.createMatrix({
                 grid: this.grid,
                 columns: 3
             });
@@ -368,7 +370,7 @@ buster.testCase("Matrix", {
         },
 
         "wraps too long colored column multiple times": function () {
-            var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            var m = ag.createMatrix({ grid: this.grid, columns: 2 });
             m.resizeColumn(1, 3);
             m.freezeColumn(1);
             m.addRow(["Firefox", "\x1b[32m.\x1b[0m\x1b[32m.\x1b[0m" +
@@ -385,7 +387,7 @@ buster.testCase("Matrix", {
 
     "appending content": {
         setUp: function () {
-            this.matrix = terminal.createMatrix({ grid: this.grid, columns: 2 });
+            this.matrix = ag.createMatrix({ grid: this.grid, columns: 2 });
         },
 
         "grows column as needed": function () {
@@ -476,47 +478,47 @@ buster.testCase("Matrix", {
             assert.calledOnce(this.matrix.redraw);
             assert.stdout("Firefox ... \n" +
                           "        ... \n");
-        }// ,
+        },
 
-        // "inserts rows and appends content": function () {
-        //     var m = terminal.createMatrix({ grid: this.grid, columns: 2 });
-        //     m.resizeColumn(1, 80);
-        //     m.freezeColumn(1);
-        //     m.addRow(["Chrome 18.0.1025.151 Linux:", ""]);
+        "// inserts rows and appends content": function () {
+            var m = ag.createMatrix({ grid: this.grid, columns: 2 });
+            m.resizeColumn(1, 80);
+            m.freezeColumn(1);
+            m.addRow(["Chrome 18.0.1025.151 Linux:", ""]);
 
-        //     assert.stdout("Chrome 18.0.1025.151 Linux:                                                                                  \n");
+            assert.stdout("Chrome 18.0.1025.151 Linux:                                                                                  \n");
 
-        //     m.insertRow(0, ["Chrome 18.0.1025.151 Linux", "./bogus.js:1 Boom"]);
+            m.insertRow(0, ["Chrome 18.0.1025.151 Linux", "./bogus.js:1 Boom"]);
 
-        //     assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
-        //                   "Chrome 18.0.1025.151 Linux:                                                                                  \n");
+            assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux:                                                                                  \n");
 
-        //     m.addRow(["Firefox 11.0 Linux:", ""]);
+            m.addRow(["Firefox 11.0 Linux:", ""]);
 
-        //     assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
-        //                   "Firefox 11.0 Linux:                           \n");
+            assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux:                   \n" +
+                          "Firefox 11.0 Linux:                           \n");
 
-        //     m.insertRow(0, ["Firefox 11.0 Linux", "./bogus.js:1 Boom"]);
+            m.insertRow(0, ["Firefox 11.0 Linux", "./bogus.js:1 Boom"]);
 
-        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
-        //                   "Firefox 11.0 Linux:                           \n");
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux:                   \n" +
+                          "Firefox 11.0 Linux:                           \n");
 
-        //     m.append(3, 1, ".");
+            m.append(3, 1, ".");
 
-        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux:                   \n" +
-        //                   "Firefox 11.0 Linux:         .                 \n");
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux:                   \n" +
+                          "Firefox 11.0 Linux:         .                 \n");
 
-        //     m.append(2, 1, ".");
+            m.append(2, 1, ".");
 
-        //     assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-        //                   "Chrome 18.0.1025.151 Linux: .                 \n" +
-        //                   "Firefox 11.0 Linux:         .                 \n");
-        // },
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
+                          "Chrome 18.0.1025.151 Linux: .                 \n" +
+                          "Firefox 11.0 Linux:         .                 \n");
+        }
     }
 });
