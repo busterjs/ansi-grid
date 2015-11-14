@@ -480,7 +480,7 @@ buster.testCase("Matrix", {
                           "        ... \n");
         },
 
-        "// inserts rows and appends content": function () {
+        "inserts rows and appends content": function () {
             var m = ag.createMatrix({ grid: this.grid, columns: 2 });
             m.resizeColumn(1, 80);
             m.freezeColumn(1);
@@ -495,30 +495,30 @@ buster.testCase("Matrix", {
 
             m.addRow(["Firefox 11.0 Linux:", ""]);
 
-            assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux:                   \n" +
-                          "Firefox 11.0 Linux:                           \n");
+            assert.stdout("Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux:                                                                                  \n" +
+                          "Firefox 11.0 Linux:                                                                                          \n");
 
             m.insertRow(0, ["Firefox 11.0 Linux", "./bogus.js:1 Boom"]);
 
-            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux:                   \n" +
-                          "Firefox 11.0 Linux:                           \n");
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux:                                                                                  \n" +
+                          "Firefox 11.0 Linux:                                                                                          \n");
 
             m.append(3, 1, ".");
 
-            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux:                   \n" +
-                          "Firefox 11.0 Linux:         .                 \n");
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux:                                                                                  \n" +
+                          "Firefox 11.0 Linux:         .                                                                                \n");
 
             m.append(2, 1, ".");
 
-            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom \n" +
-                          "Chrome 18.0.1025.151 Linux: .                 \n" +
-                          "Firefox 11.0 Linux:         .                 \n");
+            assert.stdout("Firefox 11.0 Linux          ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux  ./bogus.js:1 Boom                                                                \n" +
+                          "Chrome 18.0.1025.151 Linux: .                                                                                \n" +
+                          "Firefox 11.0 Linux:         .                                                                                \n");
         }
     }
 });

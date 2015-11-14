@@ -29,7 +29,7 @@
         "test": "node run-tests.js"
     },
     "devDependencies": {
-        "buster-node": ""
+        "buster-node": "0.7.x"
     },
-	"license": "BSD"
+	"license": "BSD-3-Clause"
 }
